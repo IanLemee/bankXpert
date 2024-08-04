@@ -32,8 +32,18 @@ public class User implements UserDetails {
 
     private String password;
 
+    private String document;
+
+    public User(String name, String email, String password, String document) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.document = document;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        System.out.println("getAuthorities called");
         return List.of();
     }
 
