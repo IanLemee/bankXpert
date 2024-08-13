@@ -1,9 +1,6 @@
 package tech.ian.user.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,11 +25,17 @@ public class User implements UserDetails {
 
     private String name;
 
+    @Column(unique = true)
     private String email;
 
     private String password;
 
+    @Column(unique = true)
     private String document;
+
+    @OneToOne()
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     public User(String name, String email, String password, String document) {
         this.name = name;
