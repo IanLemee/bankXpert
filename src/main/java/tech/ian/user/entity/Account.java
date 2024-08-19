@@ -32,7 +32,13 @@ public class Account {
     @OneToOne(mappedBy = "account")
     private User user;
 
-    @OneToMany()
-    @JoinColumn(name = "account_transactions")
-    private List<TransactionalAccount> transactions;
+    @OneToOne
+    @JoinColumn(name = "account_investment_id")
+    private AccountInvestment accountInvestment;
+
+    @OneToMany(mappedBy = "sender")
+    private List<TransactionalAccount> sentTransactions;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<TransactionalAccount> receivedTransactions;
 }
