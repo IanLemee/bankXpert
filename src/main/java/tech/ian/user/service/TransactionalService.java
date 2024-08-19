@@ -9,6 +9,7 @@ import tech.ian.user.dto.AccountTransactionalResponse;
 import tech.ian.user.entity.Account;
 import tech.ian.user.entity.TransactionalAccount;
 import tech.ian.user.entity.User;
+import tech.ian.user.enums.TransactionalType;
 import tech.ian.user.producers.UserProducer;
 import tech.ian.user.repository.AccountRepository;
 import tech.ian.user.repository.TransactionalRepository;
@@ -61,15 +62,17 @@ public class TransactionalService {
         transactional.setSender(senderAccount);
         transactional.setReceiver(receiverAccount);
         transactional.setAmount(amount);
+        transactional.setTransactionalType(TransactionalType.TRANSFER);
 
         senderAccount.setBalance(senderAccount.getBalance().subtract(amount));
         receiverAccount.setBalance(receiverAccount.getBalance().add(amount));
 
         var transactionalSaved =transactionalRepository.save(transactional);
-        accountRepository.save(receiverAccount);
+        var receiverSaved = accountRepository.save(receiverAccount);
         var senderSaved = accountRepository.save(senderAccount);
 
-         userProducer.publishTransactionalEmail(senderSaved, transactionalSaved);
+        userProducer.publishTransactionalSenderEmail(senderSaved, transactionalSaved);
+        userProducer.publishTransactionalReceiverEmail(receiverSaved, transactionalSaved);
 
         return new AccountTransactionalResponse(amount, senderAccount.getBalance());
     }

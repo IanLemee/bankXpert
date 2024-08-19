@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import tech.ian.user.enums.TransactionalType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,6 +24,8 @@ public class TransactionalAccount {
     private UUID id;
 
     private BigDecimal amount;
+
+    private TransactionalType transactionalType;
 
     @ManyToOne()
     @JoinColumn(name = "sender_account_id")
