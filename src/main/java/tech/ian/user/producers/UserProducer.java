@@ -31,13 +31,36 @@ public class UserProducer {
         rabbitTemplate.convertAndSend("", routingKey, emailDto);
     }
 
-    public void publishTransactionalEmail(Account userResponse, TransactionalAccount accountTransactionalResponse) {
+    public void publishTransactionalSenderEmail(Account userResponse, TransactionalAccount accountTransactionalResponse) {
         var emailDto = new EmailDto();
 
         emailDto.setUserId(userResponse.getUser().getId());
         emailDto.setEmailTo(userResponse.getEmail());
-        emailDto.setSubject("Transacao feita com sucesso");
-        emailDto.setText(userResponse.getEmail() + " A transacao foi feita com sucesso, no valor de " + accountTransactionalResponse.getAmount() + " seu saldo atual é de " + accountTransactionalResponse.getSender().getBalance());
+        emailDto.setSubject("Transação Realizada com Sucesso");
+        emailDto.setText(userResponse.getUser().getName() +
+                ", a transação foi realizada com sucesso no valor de " +
+                accountTransactionalResponse.getAmount() +
+                " para a conta de " +
+                accountTransactionalResponse.getReceiver().getEmail() +
+                ". Seu saldo atual é " +
+                accountTransactionalResponse.getSender().getBalance() + ".");
+
+        rabbitTemplate.convertAndSend("", routingKey, emailDto);
+    }
+
+    public void publishTransactionalReceiverEmail(Account userResponse, TransactionalAccount accountTransactionalResponse) {
+        var emailDto = new EmailDto();
+
+        emailDto.setUserId(userResponse.getUser().getId());
+        emailDto.setEmailTo(userResponse.getEmail());
+        emailDto.setSubject("Transação Recebida");
+        emailDto.setText(userResponse.getUser().getName() +
+                ", a transação foi recebida com sucesso no valor de " +
+                accountTransactionalResponse.getAmount() +
+                ". O valor foi enviado pelo usuário " +
+                accountTransactionalResponse.getSender().getEmail() +
+                ". Seu saldo atual é " +
+                accountTransactionalResponse.getReceiver().getBalance() + ".");
 
         rabbitTemplate.convertAndSend("", routingKey, emailDto);
     }
