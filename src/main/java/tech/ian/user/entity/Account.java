@@ -32,7 +32,7 @@ public class Account {
     @OneToOne(mappedBy = "account")
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_investment_id")
     private AccountInvestment accountInvestment;
 
