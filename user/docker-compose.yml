@@ -1,0 +1,10 @@
+services:
+  postgres:
+    container_name: bank-x-pert-user
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=bank_x_pert_user
