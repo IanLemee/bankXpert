@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.ian.user.dto.CreateUserResponse;
 import tech.ian.user.entity.Account;
+import tech.ian.user.entity.AccountInvestment;
 import tech.ian.user.entity.User;
 import tech.ian.user.producers.UserProducer;
+import tech.ian.user.repository.AccountInvestmentRepository;
 import tech.ian.user.repository.AccountRepository;
 import tech.ian.user.repository.UserRepository;
 
@@ -21,6 +23,9 @@ public class UserService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private AccountInvestmentRepository accountInvestmentRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -45,6 +50,16 @@ public class UserService {
 
             user.setAccount(account);
             User userSaved = userRepository.save(user);
+
+            AccountInvestment accountInvestment = new AccountInvestment();
+            accountInvestment.setAccount(account);
+            accountInvestment.setStockBalance(BigDecimal.ZERO);
+            accountInvestment.setEmail(account.getEmail());
+            accountInvestment.setDocument(account.getDocument());
+            accountInvestmentRepository.save(accountInvestment);
+
+            account.setAccountInvestment(accountInvestment);
+            accountRepository.save(account);
 
             CreateUserResponse userResponse = new CreateUserResponse(
                     userSaved.getId(),

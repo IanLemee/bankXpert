@@ -25,6 +25,7 @@ public class TransactionalAccount {
 
     private BigDecimal amount;
 
+    @Enumerated(EnumType.STRING)
     private TransactionalType transactionalType;
 
     @ManyToOne()
